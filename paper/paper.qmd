@@ -53,33 +53,26 @@ swimsafe |>
     type,
     insStatus,
     insDate,
-    infType,
-    infCategory
+    infType
   ) |>
   slice_head(n = 5) |>
   rename(
-    `Facility name` = facilityName,
+    `Facility` = facilityName,
     `Facility type` = type,
     `Inspection status` = insStatus,
     `Inspection date` = insDate,
-    `Infraction type` = infType,
-    `Infraction category` = infCategory
+    `Infraction type` = infType
   ) |>
-  tinytable::tt(
-    width = c(0.20, 0.12, 0.14, 0.12, 0.12, 0.30)
-  )
+  tinytable::tt()
 ```
+
 The raw dataset contains multiple records for some inspections because a single inspection can include multiple observations or recorded infractions. Therefore, a row in the raw dataset does not necessarily represent one complete inspection.
-
 For this analysis, an inspection is defined as one establishment, one facility type, and one inspection date. Records were grouped using these three variables and aggregated to create an inspection-level dataset. This produced 9,967 inspections from the 17,891 raw records.
-
-The analysis focuses on four facility types: Indoor Pool, Outdoor Pool, Spa Indoor, and Spa Outdoor. Inspection outcomes are recorded in the `insStatus` variable as Pass, Conditional Pass, or Closed. Individual recorded infractions are categorized in `infType` as Minor, Significant, or Crucial, while `infCategory` describes the category of the recorded infraction. The dataset metadata defines `insStatus` as the status of the inspection and `infType` as the category of detail of an infraction. The analysis uses these categories as recorded rather than assigning additional meanings to them.
-
-## Inspection-level data
+The analysis dataset contains 9,967 inspections across four facility types. Indoor pools account for the largest number of inspections, while outdoor spas account for the fewest. The difference in the number of observations across facility types is important when interpreting comparisons, particularly for outdoor spas.
 
 ```{r}
 #| label: tbl-inspection-summary
-#| tbl-cap: "Number of inspections by facility type"
+#| tbl-cap: "Number of inspection-level observations by facility type"
 #| echo: false
 
 inspections <- read_csv(
@@ -88,20 +81,30 @@ inspections <- read_csv(
 )
 
 inspection_summary <- inspections |>
-  count(type, name = "inspections")
+  count(
+    type,
+    name = "inspections"
+  ) |>
+  rename(
+    `Facility type` = type,
+    `Number of inspections` = inspections
+  ) |>
+  mutate(
+    `Number of inspections` =
+      format(`Number of inspections`, big.mark = ",")
+  )
 
 inspection_summary |>
-  tinytable::tt()
+  tinytable::tt(
+    width = c(0.55, 0.30)
+  )
 ```
-
-The analysis dataset contains 9,967 inspections across four facility types. Indoor pools account for the largest number of inspections, while outdoor spas account for the fewest. The difference in the number of observations across facility types is important when interpreting comparisons, particularly for outdoor spas.
-
 Because the number of inspections differs across facility types, comparisons are generally presented as percentages within each facility type rather than as raw counts alone. This allows the distribution of outcomes and recorded infractions to be compared across groups of different sizes. The relatively small number of Spa Outdoor inspections is considered when interpreting the results. The analysis was conducted in R [@rCoreTeam] using the `tidyverse` collection of packages [@tidyverse] and the `opendatatoronto` package [@opendatatoronto] to access and process the Toronto Open Data dataset.
 
 ## Geographic and Temporal Coverage
-The SwimSafe records also provide geographic and temporal context for the inspection data. The dataset contains geographic coordinates for the facilities represented in the records, allowing their locations to be visualized. Figure @fig-facility-locations shows the distribution of facilities by facility type across the geographic area represented in the dataset.
+The SwimSafe records also provide geographic and temporal context for the inspection data. The dataset contains geographic coordinates for the facilities represented in the records, allowing their locations to be visualized. @fig-facility-locations shows the distribution of facilities by facility type across the geographic area represented in the dataset.
 
-The records also span from July 2024 through September 2026. Figure @fig-inspection-timeline shows the number of inspection-level observations recorded in each month during this period. Inspection counts vary from month to month, and the beginning and end of the study period represent partial calendar years.
+The records also span from July 2024 through September 2026. @fig-inspection-timeline shows the number of inspection-level observations recorded in each month during this period. Inspection counts vary from month to month, and the beginning and end of the study period represent partial calendar years.
 
 ```{r}
 #| label: fig-facility-locations
@@ -141,7 +144,7 @@ ggplot(
   ) +
   coord_fixed() +
   labs(
-    title = "Geographic distribution of swimming facilities in the SwimSafe data",
+    title = "Swimming facility locations in the SwimSafe data",
     x = "Longitude",
     y = "Latitude",
     color = "Facility type"
@@ -154,7 +157,7 @@ ggplot(
 ```
 The figure provides geographic context for the facilities included in the analysis; it is descriptive and is not used to evaluate geographic differences in inspection outcomes.
 
-The inspection records also vary in their temporal coverage. Figure @fig-inspection-timeline shows the monthly number of inspection-level observations available during the study period.
+The inspection records also vary in their temporal coverage. @fig-inspection-timeline shows the monthly number of inspection-level observations available during the study period.
 
 ```{r}
 #| label: fig-inspection-timeline
@@ -237,7 +240,7 @@ ggplot(
 ```
 @fig-inspection-outcomes shows the distribution of inspection outcomes across the four facility types. Indoor pools have the highest proportion of inspections recorded as Pass, at 86.9%, while Outdoor Pools and Spa Outdoor facilities have lower proportions of Pass inspections, at 69.9% and 68.7%, respectively. The proportion of inspections that were not recorded as Pass was therefore higher for outdoor facility types than for Indoor Pools. Spa Indoor facilities fall between these groups, with 79.7% of inspections recorded as Pass.
 
-## Recorded infraction severity
+## Recorded infraction types
 ```{r}
 #| label: fig-infraction-severity
 #| fig-cap: "Distribution of recorded infraction types by swimming facility type."
@@ -267,7 +270,7 @@ ggplot(
 ) +
   geom_col() +
   labs(
-    title = "Recorded infraction severity varies across facility types",
+    title = "Recorded infraction types vary across facility types",
     x = "Facility type",
     y = "Percentage of recorded infractions",
     fill = "Infraction type"
@@ -282,7 +285,7 @@ ggplot(
     legend.position = "bottom"
   )
 ```
-@fig-infraction-severity shows that the composition of recorded infractions also differs across facility types. Indoor Pools have the largest share of recorded infractions classified as Minor, at 68.9%, whereas Spa Outdoor facilities have the smallest share, at 49.1%. The combined share of Significant and Crucial infractions ranges from 31.1% for Indoor Pools to 50.9% for Spa Outdoor facilities. These percentages describe the distribution of recorded infractions within each facility type; they do not represent the percentage of inspections with an infraction of a particular type.
+@fig-infraction-severity shows that the composition of recorded infraction types differs across facility types. Indoor Pools have the largest share of recorded infractions classified as Minor, at 68.9%, whereas Spa Outdoor facilities have the smallest share, at 49.1%. The combined share of Significant and Crucial infractions ranges from 31.1% for Indoor Pools to 50.9% for Spa Outdoor facilities. These percentages describe the distribution of recorded infractions within each facility type; they do not represent the percentage of inspections with an infraction of a particular type.
 
 ## Infraction categories
 ```{r}
@@ -340,7 +343,7 @@ ggplot(
   coord_flip() +
   facet_wrap(~ type, ncol = 2) +
   labs(
-    title = "Main infraction categories vary across facility types",
+    title = "Infraction categories vary across facility types",
     x = "Infraction category",
     y = "Percentage of recorded infractions"
   ) +
