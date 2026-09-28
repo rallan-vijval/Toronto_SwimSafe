@@ -1,0 +1,287 @@
+---
+title: "Swimming Facility Inspection Outcomes in Toronto"
+author: "Vijval Rallan"
+date: today
+format: pdf
+bibliography: references.bib
+number-sections: true
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(tinytable)
+library(here)
+```
+
+# Introduction
+
+
+# Data
+## SwimSafe Inspection Data
+```{r}
+#| label: tbl-rawdata
+#| tbl-cap: "Example observations from the SwimSafe inspection data"
+#| echo: false
+
+swimsafe <- read_csv(
+  here("data", "raw_data", "swimsafe.csv"),
+  show_col_types = FALSE
+)
+
+swimsafe |>
+  select(
+    facilityName,
+    type,
+    insStatus,
+    insDate,
+    infType,
+    infCategory
+  ) |>
+  slice_head(n = 5) |>
+  tinytable::tt()
+```
+The SwimSafe dataset contains records from inspections of swimming
+facilities in Toronto. The raw dataset contains multiple records for
+some inspections because a single inspection can include multiple
+observations or recorded infractions.
+
+For this analysis, an inspection is defined as one establishment, one
+facility type, and one inspection date. Records were therefore grouped
+using these three variables and aggregated to create an
+inspection-level dataset. This resulted in 9,967 inspections from
+17,891 raw records.
+
+The analysis focuses on four facility types: Indoor Pool, Outdoor Pool,
+Spa Indoor, and Spa Outdoor. Inspection outcomes are recorded in the
+`insStatus` variable as Pass, Conditional Pass, or Closed. Individual
+recorded infractions are categorized in `infType` as Minor, Significant,
+or Crucial, while `infCategory` describes the category of the recorded
+infraction.
+
+## Inspection-level data
+
+```{r}
+#| label: tbl-inspection-summary
+#| tbl-cap: "Number of inspections by facility type"
+#| echo: false
+
+inspections <- read_csv(
+  here("data", "analysis_data", "SwimSafe_inspections.csv"),
+  show_col_types = FALSE
+)
+
+inspection_summary <- inspections |>
+  count(type, name = "inspections")
+
+inspection_summary |>
+  tinytable::tt()
+```
+
+The analysis dataset contains 9,967 inspections across four facility types. Indoor pools account for the largest number of inspections, while outdoor spas account for the fewest. The difference in the number of observations across facility types is important when interpreting comparisons, particularly for outdoor spas.
+
+# Results
+
+## Inspection outcomes
+
+```{r}
+#| label: fig-inspection-outcomes
+#| fig-cap: "Inspection outcomes by swimming facility type."
+#| echo: false
+inspection_outcomes <- inspections |>
+  count(type, insStatus) |>
+  group_by(type) |>
+  mutate(
+    percent = 100 * n / sum(n)
+  ) |>
+  ungroup()
+
+ggplot(
+  inspection_outcomes,
+  aes(x = type, y = percent, fill = insStatus)
+) +
+  geom_col() +
+  labs(
+    title = "Inspection outcomes vary across swimming facility types",
+    x = "Facility type",
+    y = "Percentage of inspections",
+    fill = "Inspection outcome"
+  ) +
+  coord_cartesian(
+    ylim = c(0, 100),
+    expand = FALSE
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+@fig-inspection-outcomes shows the distribution of inspection outcomes across the four facility types. Indoor pools have the highest proportion of inspections recorded as Pass, at 86.9%, while Outdoor Pools and Spa Outdoor facilities have lower proportions of Pass inspections, at 69.9% and 68.7%, respectively. The proportion of inspections that were not recorded as Pass was therefore higher for outdoor facility types than for Indoor Pools. Spa Indoor facilities fall between these groups, with 79.7% of inspections recorded as Pass.
+
+## Recorded infraction severity
+```{r}
+#| label: fig-infraction-severity
+#| fig-cap: "Distribution of recorded infraction types by swimming facility type."
+#| echo: false
+
+severity_by_type <- inspections |>
+  group_by(type) |>
+  summarise(
+    minor = sum(minor),
+    significant = sum(significant),
+    crucial = sum(crucial)
+  ) |>
+  pivot_longer(
+    cols = c(minor, significant, crucial),
+    names_to = "severity",
+    values_to = "n"
+  ) |>
+  group_by(type) |>
+  mutate(
+    percent = 100 * n / sum(n)
+  ) |>
+  ungroup()
+
+ggplot(
+  severity_by_type,
+  aes(x = type, y = percent, fill = severity)
+) +
+  geom_col() +
+  labs(
+    title = "Recorded infraction severity varies across facility types",
+    x = "Facility type",
+    y = "Percentage of recorded infractions",
+    fill = "Infraction type"
+  ) +
+  coord_cartesian(
+    ylim = c(0, 100),
+    expand = FALSE
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+@fig-infraction-severity shows that the composition of recorded infractions also differs across facility types. Indoor Pools have the largest share of recorded infractions classified as Minor, at 68.9%, whereas Spa Outdoor facilities have the smallest share, at 49.1%. The combined share of Significant and Crucial infractions ranges from 31.1% for Indoor Pools to 50.9% for Spa Outdoor facilities. These percentages describe the distribution of recorded infractions within each facility type; they do not represent the percentage of inspections with an infraction of a particular type.
+
+## Infraction categories
+```{r}
+#| label: fig-infraction-categories
+#| fig-cap: "Main recorded infraction categories by swimming facility type."
+#| echo: false
+
+category_by_type <- swimsafe |>
+  filter(infCategory != "None") |>
+  count(type, infCategory, name = "n") |>
+  group_by(type) |>
+  mutate(
+    percent = 100 * n / sum(n)
+  ) |>
+  ungroup()
+
+top_five_categories <- category_by_type |>
+  group_by(infCategory) |>
+  summarise(
+    total = sum(n),
+    .groups = "drop"
+  ) |>
+  slice_max(
+    order_by = total,
+    n = 5,
+    with_ties = FALSE
+  ) |>
+  pull(infCategory)
+
+figure_3_data <- category_by_type |>
+  filter(infCategory %in% top_five_categories) |>
+  mutate(
+    category_short = case_when(
+      infCategory == "4. MAINTENANCE/PROVISION OF POOL/SPA, DECK AND EQUIPMENT" ~
+        "Maintenance & equipment",
+      infCategory == "7. TESTS, RECORDS AND INSPECTIONS" ~
+        "Tests & records",
+      infCategory == "1. WATER QUALITY AND CHEMISTRY" ~
+        "Water quality & chemistry",
+      infCategory == "5. CIRCULATION & MECHANICAL SYSTEMS" ~
+        "Circulation & mechanical",
+      infCategory == "3. POOL AND SPA SAFETY, WATER CLARITY AND CHEMICAL  STORAGE/HANDLING" ~
+        "Safety, clarity & chemical handling"
+    )
+  )
+
+ggplot(
+  figure_3_data,
+  aes(
+    x = reorder(category_short, percent),
+    y = percent
+  )
+) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~ type, ncol = 2) +
+  labs(
+    title = "Main infraction categories vary across facility types",
+    x = "Infraction category",
+    y = "Percentage of recorded infractions"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    axis.text.y = element_text(size = 8)
+  )
+```
+@fig-infraction-categories shows differences in the categories of recorded infractions across facility types. For Indoor Pools, Tests & Records and Maintenance & Equipment account for the largest shares of recorded infractions. Outdoor Pools have a relatively large share of Maintenance & Equipment and Circulation & Mechanical infractions. In contrast, Water Quality & Chemistry is the largest category for Spa Indoor facilities. These patterns indicate that the types of issues recorded during inspections are not distributed uniformly across facility types.
+
+## Common specific deficiencies
+```{r}
+#| label: tbl-common-deficiencies
+#| tbl-cap: "Three most frequently recorded specific deficiencies by facility type."
+#| echo: false
+
+top_deficiencies <- swimsafe |>
+  filter(
+    defDesc != "None",
+    !is.na(defDesc)
+  ) |>
+  count(
+    type,
+    defDesc,
+    name = "n"
+  ) |>
+  group_by(type) |>
+  slice_max(
+    order_by = n,
+    n = 3,
+    with_ties = FALSE
+  ) |>
+  arrange(type, desc(n))
+
+top_deficiencies |>
+  tinytable::tt()
+```
+The specific deficiencies provide further detail on the broader categories shown in  @fig-infraction-categories. Among Indoor Pools, maintenance of pool and deck equipment and first aid kits is the most frequently recorded specific deficiency, followed by pool alkalinity and pool pH. For Spa Indoor facilities, spa alkalinity and spa pH are the most frequently recorded deficiencies. The most common deficiencies therefore differ across facility types, although some relate to water quality and maintenance across multiple types.
+
+# Discussion
+
+## Main findings
+
+This analysis shows that inspection outcomes and recorded infraction patterns vary across Toronto's swimming facility types. Indoor Pools had the highest proportion of inspections recorded as Pass, while Outdoor Pools and Spa Outdoor facilities had higher proportions of non-Pass outcomes. The composition of recorded infractions also differed across facility types: Indoor Pools had larger shares of infractions related to Tests & Records and Maintenance & Equipment, Outdoor Pools had relatively larger shares related to Maintenance & Equipment and Circulation & Mechanical Systems, and Spa Indoor facilities had a particularly large share related to Water Quality & Chemistry.
+
+Taken together, these results suggest that swimming facility types have distinct inspection profiles. The differences are visible both in the overall inspection outcome and in the categories and types of infractions recorded during inspections. However, these descriptive patterns should not be interpreted as evidence that facility type itself causes differences in inspection outcomes or that one facility type is inherently safer or less safe than another.
+
+## Limitations
+
+Several limitations should be considered when interpreting these results. First, the analysis is descriptive and does not establish causal relationships between facility type and inspection outcomes or infractions. Second, the number of inspections differs substantially across facility types, with Spa Outdoor facilities having considerably fewer observations than Indoor Pools. Third, the analysis reflects conditions recorded during inspections and therefore does not necessarily represent conditions at a facility outside the inspection period. Finally, the categories Minor, Significant, and Crucial are used as recorded in the dataset; this analysis does not assign additional definitions or meanings to these categories beyond the available metadata.
+
+# Conclusion
+
+This analysis examined how inspection outcomes and recorded infraction patterns vary across swimming facility types in Toronto. The results show differences in both the distribution of inspection outcomes and the composition of recorded infractions, with outdoor facility types having higher observed non-Pass rates than Indoor Pools and different distributions of infraction categories across facility types. The findings provide a descriptive view of the patterns present in Toronto's SwimSafe inspection records and illustrate how open administrative data can be used to examine differences across types of public facilities.
+
+
+
+
