@@ -33,6 +33,6 @@ swimsafe <- datastore_resources %>%
 # Save raw data
 write.csv(
   swimsafe,
-  "data/raw_data/SwimSafe.csv",
+  "data/raw_data/swimsafe.csv",
   row.names = FALSE
 )
