@@ -1,7 +1,10 @@
 ---
 title: "Swimming Facility Inspection Outcomes in Toronto"
 author: "Vijval Rallan"
-date: today
+thanks: "Code and data are available at: https://github.com/rallan-vijval/Toronto_SwimSafe"
+date: 2026-09-28
+date-format: long
+abstract: This paper examines how inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto using publicly available SwimSafe inspection data. The analysis aggregates 17,891 raw records into 9,967 inspection-level observations and compares Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. The results show that outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions also differs across facility types, particularly in the categories of water quality, maintenance, testing and records, and mechanical systems. These findings provide a descriptive view of differences in Toronto's swimming-facility inspection records while highlighting the importance of accounting for differences in the number of observations across facility types.
 format: pdf
 bibliography: references.bib
 number-sections: true
@@ -19,8 +22,20 @@ library(here)
 
 # Introduction
 
+Public swimming facilities provide important recreational spaces, but their operation also involves potential risks related to water quality, chemical exposure, and other environmental and operational conditions. The World Health Organization identifies swimming pools and similar recreational-water environments as settings in which these hazards need to be controlled and monitored [@whoSwimmingPools]. The Centers for Disease Control and Prevention similarly provides guidance for public aquatic facilities covering areas such as water testing, facility operation, maintenance, and inspection [@cdcMAHC].
+
+In Toronto, the SwimSafe program is used to inspect public swimming facilities and make inspection information available through Toronto Open Data [@torontoSwimSafe]. The dataset contains information about inspection outcomes as well as recorded infractions, including their categories and types. These records provide an opportunity to examine whether inspection outcomes and the patterns of recorded infractions differ across types of swimming facilities, building on the broader role of inspections in monitoring public aquatic facilities [@cdcInspectionToolkit].
+
+This paper asks: **How do inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto?** To answer this question, I aggregate the raw SwimSafe records to the inspection level and compare Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. I examine inspection outcomes, the distribution of recorded infraction types, and the categories and specific deficiencies associated with those infractions.
+
+The analysis shows that inspection outcomes and recorded infraction patterns vary across facility types. Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions differs across facility types. These differences provide a descriptive view of how inspection records vary across Toronto's swimming facilities and illustrate how publicly available administrative data can be used to examine patterns in public-facility inspections.
+
+The remainder of the paper first describes the SwimSafe data and the construction of the inspection-level analysis dataset. It then presents the geographic and temporal coverage of the records before examining differences in inspection outcomes and recorded infraction patterns across facility types. The paper concludes by discussing the main findings and limitations of the analysis.
 
 # Data
+
+The analysis uses the City of Toronto's SwimSafe dataset, which contains records from inspections of swimming facilities in Toronto [@torontoSwimSafe]. The dataset used for this analysis contains 17,891 records covering inspections dated from July 8, 2024 to September 25, 2026. The raw data include information about the facility and establishment, inspection date and status, and recorded observations and infractions.
+
 ## SwimSafe Inspection Data
 ```{r}
 #| label: tbl-rawdata
@@ -42,25 +57,23 @@ swimsafe |>
     infCategory
   ) |>
   slice_head(n = 5) |>
-  tinytable::tt()
+  rename(
+    `Facility name` = facilityName,
+    `Facility type` = type,
+    `Inspection status` = insStatus,
+    `Inspection date` = insDate,
+    `Infraction type` = infType,
+    `Infraction category` = infCategory
+  ) |>
+  tinytable::tt(
+    width = c(0.20, 0.12, 0.14, 0.12, 0.12, 0.30)
+  )
 ```
-The SwimSafe dataset contains records from inspections of swimming
-facilities in Toronto. The raw dataset contains multiple records for
-some inspections because a single inspection can include multiple
-observations or recorded infractions.
+The raw dataset contains multiple records for some inspections because a single inspection can include multiple observations or recorded infractions. Therefore, a row in the raw dataset does not necessarily represent one complete inspection.
 
-For this analysis, an inspection is defined as one establishment, one
-facility type, and one inspection date. Records were therefore grouped
-using these three variables and aggregated to create an
-inspection-level dataset. This resulted in 9,967 inspections from
-17,891 raw records.
+For this analysis, an inspection is defined as one establishment, one facility type, and one inspection date. Records were grouped using these three variables and aggregated to create an inspection-level dataset. This produced 9,967 inspections from the 17,891 raw records.
 
-The analysis focuses on four facility types: Indoor Pool, Outdoor Pool,
-Spa Indoor, and Spa Outdoor. Inspection outcomes are recorded in the
-`insStatus` variable as Pass, Conditional Pass, or Closed. Individual
-recorded infractions are categorized in `infType` as Minor, Significant,
-or Crucial, while `infCategory` describes the category of the recorded
-infraction.
+The analysis focuses on four facility types: Indoor Pool, Outdoor Pool, Spa Indoor, and Spa Outdoor. Inspection outcomes are recorded in the `insStatus` variable as Pass, Conditional Pass, or Closed. Individual recorded infractions are categorized in `infType` as Minor, Significant, or Crucial, while `infCategory` describes the category of the recorded infraction. The dataset metadata defines `insStatus` as the status of the inspection and `infType` as the category of detail of an infraction. The analysis uses these categories as recorded rather than assigning additional meanings to them.
 
 ## Inspection-level data
 
@@ -82,6 +95,108 @@ inspection_summary |>
 ```
 
 The analysis dataset contains 9,967 inspections across four facility types. Indoor pools account for the largest number of inspections, while outdoor spas account for the fewest. The difference in the number of observations across facility types is important when interpreting comparisons, particularly for outdoor spas.
+
+Because the number of inspections differs across facility types, comparisons are generally presented as percentages within each facility type rather than as raw counts alone. This allows the distribution of outcomes and recorded infractions to be compared across groups of different sizes. The relatively small number of Spa Outdoor inspections is considered when interpreting the results. The analysis was conducted in R [@rCoreTeam] using the `tidyverse` collection of packages [@tidyverse] and the `opendatatoronto` package [@opendatatoronto] to access and process the Toronto Open Data dataset.
+
+## Geographic and Temporal Coverage
+The SwimSafe records also provide geographic and temporal context for the inspection data. The dataset contains geographic coordinates for the facilities represented in the records, allowing their locations to be visualized. Figure @fig-facility-locations shows the distribution of facilities by facility type across the geographic area represented in the dataset.
+
+The records also span from July 2024 through September 2026. Figure @fig-inspection-timeline shows the number of inspection-level observations recorded in each month during this period. Inspection counts vary from month to month, and the beginning and end of the study period represent partial calendar years.
+
+```{r}
+#| label: fig-facility-locations
+#| fig-cap: "Geographic distribution of swimming facilities represented in the SwimSafe data."
+#| echo: false
+#| warning: false
+#| message: false
+
+facility_locations <- swimsafe |>
+  distinct(estName, type, geometry) |>
+  mutate(
+    coordinates = str_extract_all(
+      geometry,
+      "-?[0-9]+\\.[0-9]+"
+    ),
+    longitude = map_dbl(
+      coordinates,
+      ~ as.numeric(.x[1])
+    ),
+    latitude = map_dbl(
+      coordinates,
+      ~ as.numeric(.x[2])
+    )
+  )
+
+ggplot(
+  facility_locations,
+  aes(
+    x = longitude,
+    y = latitude,
+    color = type
+  )
+) +
+  geom_point(
+    alpha = 0.45,
+    size = 1.4
+  ) +
+  coord_fixed() +
+  labs(
+    title = "Geographic distribution of swimming facilities in the SwimSafe data",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Facility type"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+The figure provides geographic context for the facilities included in the analysis; it is descriptive and is not used to evaluate geographic differences in inspection outcomes.
+
+The inspection records also vary in their temporal coverage. Figure @fig-inspection-timeline shows the monthly number of inspection-level observations available during the study period.
+
+```{r}
+#| label: fig-inspection-timeline
+#| fig-cap: "Monthly number of recorded inspections in the SwimSafe inspection-level dataset."
+#| echo: false
+#| warning: false
+#| message: false
+
+inspection_timeline <- inspections |>
+  mutate(
+    month = as.Date(format(insDate, "%Y-%m-01"))
+  ) |>
+  count(
+    month,
+    name = "inspections"
+  )
+
+ggplot(
+  inspection_timeline,
+  aes(
+    x = month,
+    y = inspections
+  )
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+  labs(
+    title = "Monthly number of recorded inspections",
+    x = "Month",
+    y = "Number of inspections"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold")
+  )
+```
+Inspection counts vary from month to month. The dataset covers part of 2024, all of 2025, and part of 2026, so the beginning and end of the study period should not be interpreted as complete-year comparisons.
+
+With the geographic and temporal coverage of the dataset established, the analysis next examines how inspection outcomes and recorded infraction patterns differ across facility types.
 
 # Results
 
@@ -239,8 +354,8 @@ ggplot(
 
 ## Common specific deficiencies
 ```{r}
-#| label: tbl-common-deficiencies
-#| tbl-cap: "Three most frequently recorded specific deficiencies by facility type."
+#| label: tbl-specific-deficiencies
+#| tbl-cap: "Three most frequently recorded specific deficiencies by facility type"
 #| echo: false
 
 top_deficiencies <- swimsafe |>
@@ -259,10 +374,77 @@ top_deficiencies <- swimsafe |>
     n = 3,
     with_ties = FALSE
   ) |>
-  arrange(type, desc(n))
+  ungroup() |>
+  mutate(
+    deficiency = case_when(
+      str_detect(
+        defDesc,
+        regex("alkalinity", ignore_case = TRUE)
+      ) ~ case_when(
+        str_detect(defDesc, regex("spa", ignore_case = TRUE)) ~
+          "Spa alkalinity",
+        TRUE ~
+          "Pool alkalinity"
+      ),
+
+      str_detect(
+        defDesc,
+        regex("PH VALUE", ignore_case = TRUE)
+      ) ~ case_when(
+        str_detect(defDesc, regex("SPA", ignore_case = TRUE)) ~
+          "Spa pH",
+        TRUE ~
+          "Pool pH"
+      ),
+
+      str_detect(
+        defDesc,
+        regex("bromine", ignore_case = TRUE)
+      ) ~
+        "Total bromine",
+
+      str_detect(
+        defDesc,
+        regex("free available chlorine", ignore_case = TRUE)
+      ) ~
+        "Free available chlorine",
+
+      str_detect(
+        defDesc,
+        regex("health hazard", ignore_case = TRUE)
+      ) ~
+        "Health hazard conditions",
+
+      str_detect(
+        defDesc,
+        regex("components.*proper working order", ignore_case = TRUE)
+      ) ~
+        "Pool components not maintained in working order",
+
+      str_detect(
+        defDesc,
+        regex("deck equipment and first aid kit", ignore_case = TRUE)
+      ) ~
+        "Pool/deck equipment and first aid kit maintenance",
+
+      TRUE ~ defDesc
+    )
+  ) |>
+  select(
+    type,
+    deficiency,
+    n
+  ) |>
+  rename(
+    `Facility type` = type,
+    `Specific deficiency` = deficiency,
+    `Number recorded` = n
+  )
 
 top_deficiencies |>
-  tinytable::tt()
+  tinytable::tt(
+    width = c(0.20, 0.60, 0.20)
+  )
 ```
 The specific deficiencies provide further detail on the broader categories shown in  @fig-infraction-categories. Among Indoor Pools, maintenance of pool and deck equipment and first aid kits is the most frequently recorded specific deficiency, followed by pool alkalinity and pool pH. For Spa Indoor facilities, spa alkalinity and spa pH are the most frequently recorded deficiencies. The most common deficiencies therefore differ across facility types, although some relate to water quality and maintenance across multiple types.
 
@@ -282,6 +464,6 @@ Several limitations should be considered when interpreting these results. First,
 
 This analysis examined how inspection outcomes and recorded infraction patterns vary across swimming facility types in Toronto. The results show differences in both the distribution of inspection outcomes and the composition of recorded infractions, with outdoor facility types having higher observed non-Pass rates than Indoor Pools and different distributions of infraction categories across facility types. The findings provide a descriptive view of the patterns present in Toronto's SwimSafe inspection records and illustrate how open administrative data can be used to examine differences across types of public facilities.
 
-
+# References
 
 
