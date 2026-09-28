@@ -1,4 +1,36 @@
-.Rproj.user
+# R / RStudio user files
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+.Rapp.history
+
+# macOS
+.DS_Store
+
+# R environment / credentials
+.Renviron
+.httr-oauth
+
+# R Markdown / Quarto temporary files
+*_cache/
+cache/
+*.utf8.md
+*.knit.md
+
+# R package build/check files
+*.tar.gz
+*.Rcheck/
+
+# Quarto / PDF auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Temporary files
+*.tmp
+*.temp
