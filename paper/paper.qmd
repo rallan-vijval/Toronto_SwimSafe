@@ -359,6 +359,7 @@ ggplot(
 ```{r}
 #| label: tbl-specific-deficiencies
 #| tbl-cap: "Three most frequently recorded specific deficiencies by facility type"
+#| tbl-pos: H
 #| echo: false
 
 top_deficiencies <- swimsafe |>
@@ -449,7 +450,7 @@ top_deficiencies |>
     width = c(0.20, 0.60, 0.20)
   )
 ```
-The specific deficiencies provide further detail on the broader categories shown in  @fig-infraction-categories. Among Indoor Pools, maintenance of pool and deck equipment and first aid kits is the most frequently recorded specific deficiency, followed by pool alkalinity and pool pH. For Spa Indoor facilities, spa alkalinity and spa pH are the most frequently recorded deficiencies. The most common deficiencies therefore differ across facility types, although some relate to water quality and maintenance across multiple types.
+The specific deficiencies provide further detail on the broader categories shown in @fig-infraction-categories. @tbl-specific-deficiencies presents the three most frequently recorded specific deficiencies within each facility type. Among Indoor Pools, maintenance of pool and deck equipment and first aid kits is the most frequently recorded specific deficiency, followed by pool alkalinity and pool pH. For Spa Indoor facilities, spa alkalinity and spa pH are the most frequently recorded deficiencies. The most common deficiencies therefore differ across facility types, although some relate to water quality and maintenance across multiple types.
 
 # Discussion
 
@@ -461,7 +462,7 @@ Taken together, these results suggest that swimming facility types have distinct
 
 ## Limitations
 
-Several limitations should be considered when interpreting these results. First, the analysis is descriptive and does not establish causal relationships between facility type and inspection outcomes or infractions. Second, the number of inspections differs substantially across facility types, with Spa Outdoor facilities having considerably fewer observations than Indoor Pools. Third, the analysis reflects conditions recorded during inspections and therefore does not necessarily represent conditions at a facility outside the inspection period. Finally, the categories Minor, Significant, and Crucial are used as recorded in the dataset; this analysis does not assign additional definitions or meanings to these categories beyond the available metadata.
+Several limitations should be considered when interpreting these results. First, The study period covers only part of 2024 and part of 2026, so the data should not be used to make complete-year comparisons across those years. Second, the analysis is descriptive and does not establish causal relationships between facility type and inspection outcomes or infractions. Third, the number of inspections differs substantially across facility types, with Spa Outdoor facilities having considerably fewer observations than Indoor Pools. Fourth, the analysis reflects conditions recorded during inspections and therefore does not necessarily represent conditions at a facility outside the inspection period. Finally, the categories Minor, Significant, and Crucial are used as recorded in the dataset; this analysis does not assign additional definitions or meanings to these categories beyond the available metadata.
 
 # Conclusion
 
