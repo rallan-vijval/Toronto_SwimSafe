@@ -5,12 +5,12 @@ library(tidyverse)
 
 # Read analysis data
 inspections <- read_csv(
-  "data/analysis_data/SwimSafe_inspections.csv"
+  "data/analysis_data/swimsafe_inspections.csv"
 )
 
 # Read raw data for analyses that use individual recorded infractions
 swimsafe <- read_csv(
-  "data/raw_data/SwimSafe.csv"
+  "data/raw_data/swimsafe.csv"
 )
 
 

@@ -4,7 +4,7 @@ library(tidyverse)
 
 # Read raw data
 swimsafe <- read_csv(
-  "data/raw_data/SwimSafe.csv"
+  "data/raw_data/swimsafe.csv"
 )
 
 # Create one row per inspection
@@ -35,6 +35,6 @@ inspections <- swimsafe %>%
 # Save analysis data
 write_csv(
   inspections,
-  "data/analysis_data/SwimSafe_inspections.csv"
+  "data/analysis_data/swimsafe_inspections.csv"
 )
 
