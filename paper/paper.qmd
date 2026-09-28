@@ -100,7 +100,7 @@ inspection_summary |>
     width = c(0.55, 0.30)
   )
 ```
-Because the number of inspections differs across facility types, comparisons are generally presented as percentages within each facility type rather than as raw counts alone. This allows the distribution of outcomes and recorded infractions to be compared across groups of different sizes. The relatively small number of Spa Outdoor inspections is considered when interpreting the results. The analysis was conducted in R [@rCoreTeam] using the `tidyverse` collection of packages [@tidyverse] and the `opendatatoronto` package [@opendatatoronto] to access and process the Toronto Open Data dataset.
+Because the number of inspections differs across facility types, comparisons are generally presented as percentages within each facility type rather than as raw counts alone. This allows the distribution of outcomes and recorded infractions to be compared across groups of different sizes. The relatively small number of Spa Outdoor inspections is considered when interpreting the results.The analysis was conducted in R [@rCoreTeam] using the `tidyverse` collection of packages [@tidyverse], `ggplot2` [@ggplot2] for visualization, `tinytable` [@tinytable] for tables, the `opendatatoronto` package [@opendatatoronto] to access and process the Toronto Open Data dataset, and `here` [@here] for project-relative file paths.
 
 ## Geographic and Temporal Coverage
 The SwimSafe records also provide geographic and temporal context for the inspection data. The dataset contains geographic coordinates for the facilities represented in the records, allowing their locations to be visualized. @fig-facility-locations shows the distribution of facilities by facility type across the geographic area represented in the dataset.
@@ -472,6 +472,55 @@ The analysis uses publicly available administrative data about swimming faciliti
 # Conclusion
 
 This analysis examined how inspection outcomes and recorded infraction patterns vary across swimming facility types in Toronto. The results show differences in both the distribution of inspection outcomes and the composition of recorded infractions, with outdoor facility types having higher observed non-Pass rates than Indoor Pools and different distributions of infraction categories across facility types. The findings provide a descriptive view of the patterns present in Toronto's SwimSafe inspection records and illustrate how open administrative data can be used to examine differences across types of public facilities.
+
+# Appendix {.unnumbered}
+
+## A. Data Processing and Variable Definitions {.unnumbered}
+
+The SwimSafe dataset contains multiple records for individual inspections because an inspection may include multiple observations or recorded infractions. The analysis therefore aggregates the raw records to an inspection-level dataset. An inspection is defined as a unique combination of establishment (`estName`), facility type (`type`), and inspection date (`insDate`). This aggregation produces 9,967 inspection-level observations from the 17,891 raw records.
+
+For each inspection, the recorded inspection status is retained using the following rule when multiple statuses occur within an inspection: `Closed` takes precedence over `Conditional Pass`, which takes precedence over `Pass`. The number of recorded infractions is calculated from the `infType` variable, with separate counts for Minor, Significant, and Crucial infractions. The number of distinct non-`None` infraction categories is also recorded.
+
+### A.1 Key Variables {.unnumbered}
+
+```{r}
+#| label: tbl-variable-definitions
+#| tbl-cap: "Key variables used in the SwimSafe analysis"
+#| tbl-pos: H
+#| echo: false
+
+variable_definitions <- tibble(
+  Variable = c(
+    "estName",
+    "type",
+    "insDate",
+    "insStatus",
+    "infType",
+    "infCategory",
+    "defDesc"
+  ),
+  Description = c(
+    "Establishment associated with the inspection",
+    "Type of swimming facility",
+    "Date of the inspection",
+    "Recorded inspection status",
+    "Recorded type of infraction",
+    "Category of recorded infraction",
+    "Description of the specific deficiency or observation"
+  )
+)
+
+variable_definitions |>
+  tinytable::tt()
+```
+
+## B. Additional Analysis Details {.unnumbered}
+
+The inspection outcome analysis calculates the percentage of inspections within each facility type that were recorded as Pass, Conditional Pass, or Closed. Percentages are therefore calculated separately within each facility type rather than across the full dataset.
+
+For recorded infraction types, the analysis excludes observations with `infType = "None"` and calculates the proportion of recorded Minor, Significant, and Crucial infractions within each facility type. These percentages describe the composition of recorded infractions and do not represent the proportion of inspections receiving a particular infraction type.
+
+For infraction categories, observations with `infCategory = "None"` are excluded. The analysis identifies the five categories with the largest total number of recorded infractions and compares their percentage distribution across facility types. Specific deficiencies are summarized by identifying the three most frequently recorded `defDesc` values within each facility type.
 
 # References
 

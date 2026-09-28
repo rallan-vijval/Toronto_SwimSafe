@@ -1,3 +1,14 @@
+#### Preamble ####
+# Purpose: Download and save the actual SwimSafe Dataset
+# from Open Data Toronto
+# Author: Vijval Rallan
+# Date: 28 September 2026
+# Contact: vijval.rallan@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: None
+# Any other information needed? N/A
+
+
 # Download Toronto SwimSafe data
 # --------------------------------
 install.packages('opendatatoronto')
