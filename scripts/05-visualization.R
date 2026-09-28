@@ -10,7 +10,7 @@ swimsafe <- read_csv(
 
 # Read analysis data
 inspections <- read_csv(
-  "data/analysis_data/SwimSafe_inspections.csv"
+  "data/analysis_data/swimsafe_inspections.csv"
 )
 
 # ---------------------------------------------------------

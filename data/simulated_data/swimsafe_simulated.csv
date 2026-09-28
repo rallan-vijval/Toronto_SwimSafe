@@ -1,0 +1,31 @@
+unique_id,facilityName,estName,type,insStatus,insDate,infCategory,defDesc,infType,actionDesc
+1,Simulated Aquatic Centre,Simulated Facility A,Indoor Pool,Pass,2025-07-18,Water quality and chemistry,Pool alkalinity,None,Corrective action required
+2,Simulated Aquatic Centre,Simulated Facility B,Spa Outdoor,Pass,2025-03-08,Water quality and chemistry,Maintenance of pool/spa deck equipment and first aid kit,S - Significant,None
+3,Simulated Aquatic Centre,Simulated Facility C,Spa Outdoor,Pass,2025-05-31,"Maintenance/provision of pool/spa, deck and equipment",Maintenance of pool/spa deck equipment and first aid kit,C - Crucial,None
+4,Simulated Recreation Centre,Simulated Facility D,Spa Indoor,Pass,2025-12-01,"Tests, records and inspections",Pool alkalinity,M - Minor,None
+5,Simulated Aquatic Centre,Simulated Facility B,Indoor Pool,Pass,2025-03-26,"Maintenance/provision of pool/spa, deck and equipment",Pool alkalinity,None,None
+6,Simulated Recreation Centre,Simulated Facility A,Outdoor Pool,Pass,2025-06-14,"Maintenance/provision of pool/spa, deck and equipment",Maintenance of pool/spa deck equipment and first aid kit,None,None
+7,Simulated Recreation Centre,Simulated Facility C,Indoor Pool,Conditional Pass,2025-05-16,Water quality and chemistry,None,M - Minor,Corrective action required
+8,Simulated Recreation Centre,Simulated Facility C,Indoor Pool,Pass,2025-02-20,None,Maintenance of pool/spa deck equipment and first aid kit,S - Significant,None
+9,Simulated Aquatic Centre,Simulated Facility A,Spa Indoor,Pass,2025-03-15,Water quality and chemistry,Pool pH,None,Corrective action required
+10,Simulated Community Centre,Simulated Facility D,Indoor Pool,Pass,2025-06-27,"Tests, records and inspections",Pool pH,M - Minor,Corrective action required
+11,Simulated Wellness Centre,Simulated Facility C,Outdoor Pool,Pass,2025-12-28,"Tests, records and inspections",Maintenance of pool/spa deck equipment and first aid kit,M - Minor,Corrective action required
+12,Simulated Recreation Centre,Simulated Facility D,Indoor Pool,Pass,2025-08-24,"Tests, records and inspections",None,None,None
+13,Simulated Recreation Centre,Simulated Facility B,Spa Indoor,Pass,2025-04-08,None,Maintenance of pool/spa deck equipment and first aid kit,C - Crucial,Corrective action required
+14,Simulated Community Centre,Simulated Facility A,Indoor Pool,Closed,2025-11-26,"Maintenance/provision of pool/spa, deck and equipment",Maintenance of pool/spa deck equipment and first aid kit,C - Crucial,None
+15,Simulated Recreation Centre,Simulated Facility C,Spa Indoor,Pass,2025-08-02,"Maintenance/provision of pool/spa, deck and equipment",Pool pH,C - Crucial,Corrective action required
+16,Simulated Aquatic Centre,Simulated Facility A,Outdoor Pool,Conditional Pass,2025-05-07,"Tests, records and inspections",Pool alkalinity,M - Minor,None
+17,Simulated Wellness Centre,Simulated Facility A,Spa Outdoor,Closed,2025-07-31,"Tests, records and inspections",Maintenance of pool/spa deck equipment and first aid kit,C - Crucial,None
+18,Simulated Community Centre,Simulated Facility B,Spa Indoor,Pass,2025-06-23,Water quality and chemistry,Maintenance of pool/spa deck equipment and first aid kit,None,None
+19,Simulated Aquatic Centre,Simulated Facility C,Spa Outdoor,Pass,2025-09-30,"Tests, records and inspections",Maintenance of pool/spa deck equipment and first aid kit,None,None
+20,Simulated Aquatic Centre,Simulated Facility C,Spa Outdoor,Pass,2025-10-29,None,Pool alkalinity,M - Minor,None
+21,Simulated Community Centre,Simulated Facility D,Outdoor Pool,Closed,2025-11-06,"Maintenance/provision of pool/spa, deck and equipment",None,None,None
+22,Simulated Wellness Centre,Simulated Facility A,Outdoor Pool,Pass,2025-08-20,None,Maintenance of pool/spa deck equipment and first aid kit,C - Crucial,Corrective action required
+23,Simulated Community Centre,Simulated Facility C,Spa Indoor,Pass,2025-08-31,"Maintenance/provision of pool/spa, deck and equipment",Maintenance of pool/spa deck equipment and first aid kit,S - Significant,None
+24,Simulated Community Centre,Simulated Facility A,Spa Outdoor,Closed,2025-12-16,Water quality and chemistry,Maintenance of pool/spa deck equipment and first aid kit,None,Corrective action required
+25,Simulated Community Centre,Simulated Facility C,Outdoor Pool,Conditional Pass,2025-12-01,Water quality and chemistry,Pool pH,None,None
+26,Simulated Aquatic Centre,Simulated Facility D,Outdoor Pool,Pass,2025-10-07,None,None,C - Crucial,None
+27,Simulated Wellness Centre,Simulated Facility B,Spa Indoor,Pass,2025-04-23,"Maintenance/provision of pool/spa, deck and equipment",Pool pH,C - Crucial,None
+28,Simulated Recreation Centre,Simulated Facility A,Spa Indoor,Closed,2025-04-17,Water quality and chemistry,Pool alkalinity,M - Minor,None
+29,Simulated Aquatic Centre,Simulated Facility B,Spa Outdoor,Pass,2025-05-31,"Tests, records and inspections",Maintenance of pool/spa deck equipment and first aid kit,None,Corrective action required
+30,Simulated Recreation Centre,Simulated Facility A,Indoor Pool,Pass,2025-06-03,None,Pool alkalinity,C - Crucial,Corrective action required

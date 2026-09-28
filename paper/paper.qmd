@@ -4,7 +4,7 @@ author: "Vijval Rallan"
 thanks: "Code and data are available at: https://github.com/rallan-vijval/Toronto_SwimSafe"
 date: 2026-09-28
 date-format: long
-abstract: This paper examines how inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto using publicly available SwimSafe inspection data. The analysis aggregates 17,891 raw records into 9,967 inspection-level observations and compares Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. The results show that outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions also differs across facility types, particularly in the categories of water quality, maintenance, testing and records, and mechanical systems. These findings provide a descriptive view of differences in Toronto's swimming-facility inspection records while highlighting the importance of accounting for differences in the number of observations across facility types.
+abstract: This paper examines how inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto using publicly available SwimSafe inspection data. The analysis aggregates 17,891 raw records into 9,967 inspection-level observations and compares Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions also differs across facility types.
 format: pdf
 bibliography: references.bib
 number-sections: true
@@ -28,7 +28,7 @@ In Toronto, the SwimSafe program is used to inspect public swimming facilities a
 
 This paper asks: **How do inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto?** To answer this question, I aggregate the raw SwimSafe records to the inspection level and compare Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. I examine inspection outcomes, the distribution of recorded infraction types, and the categories and specific deficiencies associated with those infractions.
 
-The analysis shows that inspection outcomes and recorded infraction patterns vary across facility types. Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions differs across facility types. These differences provide a descriptive view of how inspection records vary across Toronto's swimming facilities and illustrate how publicly available administrative data can be used to examine patterns in public-facility inspections.
+The analysis shows that inspection outcomes and recorded infraction patterns vary across facility types. Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions differs across facility types. Comparing facility types is useful because the types and frequencies of recorded inspection findings may differ across facilities with different operational characteristics, making aggregate inspection counts alone difficult to interpret.
 
 The remainder of the paper first describes the SwimSafe data and the construction of the inspection-level analysis dataset. It then presents the geographic and temporal coverage of the records before examining differences in inspection outcomes and recorded infraction patterns across facility types. The paper concludes by discussing the main findings and limitations of the analysis.
 
@@ -69,6 +69,7 @@ swimsafe |>
 The raw dataset contains multiple records for some inspections because a single inspection can include multiple observations or recorded infractions. Therefore, a row in the raw dataset does not necessarily represent one complete inspection.
 For this analysis, an inspection is defined as one establishment, one facility type, and one inspection date. Records were grouped using these three variables and aggregated to create an inspection-level dataset. This produced 9,967 inspections from the 17,891 raw records.
 The analysis dataset contains 9,967 inspections across four facility types. Indoor pools account for the largest number of inspections, while outdoor spas account for the fewest. The difference in the number of observations across facility types is important when interpreting comparisons, particularly for outdoor spas.
+@tbl-inspection-summary shows the number of inspection-level observations available for each facility type.
 
 ```{r}
 #| label: tbl-inspection-summary
@@ -76,7 +77,7 @@ The analysis dataset contains 9,967 inspections across four facility types. Indo
 #| echo: false
 
 inspections <- read_csv(
-  here("data", "analysis_data", "SwimSafe_inspections.csv"),
+  here("data", "analysis_data", "swimsafe_inspections.csv"),
   show_col_types = FALSE
 )
 
@@ -353,7 +354,7 @@ ggplot(
     axis.text.y = element_text(size = 8)
   )
 ```
-@fig-infraction-categories shows differences in the categories of recorded infractions across facility types. For Indoor Pools, Tests & Records and Maintenance & Equipment account for the largest shares of recorded infractions. Outdoor Pools have a relatively large share of Maintenance & Equipment and Circulation & Mechanical infractions. In contrast, Water Quality & Chemistry is the largest category for Spa Indoor facilities. These patterns indicate that the types of issues recorded during inspections are not distributed uniformly across facility types.
+@fig-infraction-categories shows differences in the categories of recorded infractions across facility types. For Indoor Pools, Tests & Records and Maintenance & Equipment account for the largest shares of recorded infractions. Outdoor Pools have a relatively large share of Maintenance & Equipment and Circulation & Mechanical infractions. In contrast, Water Quality & Chemistry is the largest category for Spa Indoor facilities. These patterns show that the distribution of recorded infraction categories differs across facility types.
 
 ## Common specific deficiencies
 ```{r}
@@ -460,9 +461,13 @@ This analysis shows that inspection outcomes and recorded infraction patterns va
 
 Taken together, these results suggest that swimming facility types have distinct inspection profiles. The differences are visible both in the overall inspection outcome and in the categories and types of infractions recorded during inspections. However, these descriptive patterns should not be interpreted as evidence that facility type itself causes differences in inspection outcomes or that one facility type is inherently safer or less safe than another.
 
-## Limitations
+## Limitations 
 
-Several limitations should be considered when interpreting these results. First, The study period covers only part of 2024 and part of 2026, so the data should not be used to make complete-year comparisons across those years. Second, the analysis is descriptive and does not establish causal relationships between facility type and inspection outcomes or infractions. Third, the number of inspections differs substantially across facility types, with Spa Outdoor facilities having considerably fewer observations than Indoor Pools. Fourth, the analysis reflects conditions recorded during inspections and therefore does not necessarily represent conditions at a facility outside the inspection period. Finally, the categories Minor, Significant, and Crucial are used as recorded in the dataset; this analysis does not assign additional definitions or meanings to these categories beyond the available metadata.
+Several limitations should be considered when interpreting these results. First, the study period covers only part of 2024 and part of 2026, so the data should not be used to make complete-year comparisons across those years. Second, the analysis is descriptive and does not establish causal relationships between facility type and inspection outcomes or infractions. Third, the number of inspections differs substantially across facility types, with Spa Outdoor facilities having considerably fewer observations than Indoor Pools. Fourth, the analysis reflects conditions recorded during inspections and therefore does not necessarily represent conditions at a facility outside the inspection period. Finally, the categories Minor, Significant, and Crucial are used as recorded in the dataset; this analysis does not assign additional definitions or meanings to these categories beyond the available metadata.
+
+## Ethical Considerations
+
+The analysis uses publicly available administrative data about swimming facilities rather than individual-level personal information. The analysis therefore focuses on aggregate patterns across facility types rather than identifying or evaluating individual people. Facility-level inspection records can nevertheless influence perceptions of particular establishments, so the results are presented descriptively and are not interpreted as evidence that any individual facility is unsafe or non-compliant outside the recorded inspection context.
 
 # Conclusion
 
