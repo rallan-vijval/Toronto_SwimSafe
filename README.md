@@ -57,4 +57,4 @@ The scripts use project-relative paths so that the analysis does not depend on a
 
 ## Statement on LLM usage
 
-This project utilized ChatGPT to assist during the research, development, and writing processes. All records of usage can be found in the `other/llm` folder of this repository.
+This project utilized ChatGPT to assist with data collection, analysis and writing processes. All records of usage can be found in the `other/llm` folder of this repository.
