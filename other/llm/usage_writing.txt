@@ -1,12 +1,10 @@
-LLM: ChatGPT
-
 
 Usage 1 - Developing the research question:
 
 User: I have selected the Toronto SwimSafe dataset for my individual data story. Can you help me come up with a research question that can be answered using the data?
 
-LLM:
-ChatGPT suggested focusing on differences between swimming facility types and their inspection outcomes and recorded infraction patterns.
+Chatgpt:
+Suggested focusing on differences between swimming facility types and their inspection outcomes and recorded infraction patterns.
 
 The research question developed during the project was:
 
@@ -17,8 +15,8 @@ Usage 2 - Developing the story:
 
 User: I have the inspection outcomes and infraction data. What kind of story can I tell with this dataset?
 
-LLM:
-ChatGPT suggested comparing Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities.
+Chatgpt:
+Comparing Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities.
 
 The main story developed was that inspection outcomes and recorded infraction patterns vary across facility types. Outdoor facility types had higher observed non-Pass rates than Indoor Pools, while the composition of recorded infractions differed across facility types.
 
@@ -27,8 +25,8 @@ Usage 3 - Revising the introduction:
 
 User: Here is my introduction. Can you check it for clarity and make sure it explains the context, research question, what I did, and why the analysis is useful?
 
-LLM:
-ChatGPT reviewed the introduction and suggested revisions to improve the flow between the background, research question, method, findings, and importance of the analysis.
+Chatgpt:
+Reviewed the introduction and suggested revisions to improve the flow between the background, research question, method, findings, and importance of the analysis.
 
 ChatGPT also suggested adding a sentence explaining why comparing facility types is useful.
 
@@ -37,8 +35,8 @@ Usage 4 - Writing the results:
 
 User: I have these results for inspection outcomes and recorded infractions. Help me explain what they show without making causal claims.
 
-LLM:
-ChatGPT helped describe the differences between facility types using descriptive language.
+Chatgpt:
+Helped describe the differences between facility types using descriptive language.
 
 For example, the writing was framed around differences in observed inspection outcomes and recorded infraction patterns rather than claiming that one facility type causes more problems than another.
 
@@ -47,29 +45,29 @@ Usage 5 - Revising repetitive writing:
 
 User: Can you check this section of my paper for repetitive content and make the writing more concise?
 
-LLM:
-ChatGPT identified repeated ideas and suggested combining similar sentences and paragraphs while keeping the main findings and interpretation unchanged.
+Chatgpt:
+Identified repeated ideas and suggested combining similar sentences and paragraphs while keeping the main findings and interpretation unchanged.
 
 
 Usage 6 - Ethical considerations and limitations:
 
 User: What ethical considerations and limitations should I mention for this analysis?
 
-LLM:
-ChatGPT suggested discussing the use of publicly available administrative data, avoiding conclusions about individual facilities beyond their recorded inspection context, and noting limitations such as the descriptive nature of the analysis and differences in the number of observations across facility types.
+Chatgpt:
+Discussing the use of publicly available administrative data, avoiding conclusions about individual facilities beyond their recorded inspection context, and noting limitations such as the descriptive nature of the analysis and differences in the number of observations across facility types.
 
 
 Usage 7 - Quarto tables and figures:
 
 User: Can you help me format my figures and tables in Quarto and make sure the references work correctly?
 
-LLM:
-ChatGPT helped with Quarto figure labels, table labels, captions, and cross-references. It also helped identify software packages that should be cited in the paper's references.
+Chatgpt:
+Helped with Quarto figure labels, table labels, captions, and cross-references. It also helped identify software packages that should be cited in the paper's references.
 
 
 Usage 8 - Final paper review:
 
 User: Can you review the final paper against the assignment requirements and identify anything that is missing?
 
-LLM:
-ChatGPT reviewed the paper against the assignment requirements and helped identify items such as the abstract, introduction, data description, ethical considerations, references, appendix, reproducibility information, and LLM documentation.
+Chatgpt:
+Reviewed the paper against the assignment requirements and helped identify items such as the abstract, introduction, data description, ethical considerations, references, appendix and reproducibility information.

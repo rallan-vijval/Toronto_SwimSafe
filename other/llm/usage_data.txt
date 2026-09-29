@@ -1,13 +1,13 @@
-LLM: ChatGPT
+
 
 Usage 1 - Accessing the SwimSafe dataset:
 
 User: I want to use the Toronto SwimSafe dataset for my project. How can I access the dataset using the opendatatoronto package and find the CSV resource?
 
-LLM:
-ChatGPT helped me use the opendatatoronto package to access the Toronto Open Data portal and identify the SwimSafe CSV resource.
+Chatgpt:
+Helped me use the opendatatoronto package to access the Toronto Open Data portal and identify the SwimSafe CSV resource.
 
-Example code:
+code:
 library(opendatatoronto)
 library(dplyr)
 
@@ -27,10 +27,10 @@ Usage 2 - Understanding the unit of analysis:
 
 User: The SwimSafe dataset has multiple rows for the same inspection because there can be multiple infractions. How should I aggregate the data so that each observation represents one inspection?
 
-LLM:
-ChatGPT explained that the raw records should be aggregated using the establishment, facility type, and inspection date. It suggested grouping by estName, type, and insDate and summarizing the inspection status and recorded infractions.
+Chatgpt:
+Explained that the raw records should be aggregated using the establishment, facility type, and inspection date. It suggested grouping by estName, type, and insDate and summarizing the inspection status and recorded infractions.
 
-Example code:
+code:
 
 inspections <- swimsafe %>%
   group_by(estName, type, insDate) %>%
@@ -55,10 +55,10 @@ Usage 3 - Calculating inspection outcomes:
 
 User: I want to compare the percentage of non-Pass inspections across Indoor Pool, Outdoor Pool, Spa Indoor, and Spa Outdoor. How can I calculate this in R?
 
-LLM:
-ChatGPT suggested grouping the inspection-level data by facility type and calculating the number and percentage of inspections that were not Pass.
+Chatgpt:
+Suggested grouping the inspection-level data by facility type and calculating the number and percentage of inspections that were not Pass.
 
-Example code:
+code:
 
 non_pass_by_type <- inspections %>%
   group_by(type) %>%
@@ -73,10 +73,10 @@ Usage 4 - Comparing recorded infraction types:
 
 User: I want to see the distribution of Minor, Significant, and Crucial recorded infractions for each facility type. How can I calculate the percentages?
 
-LLM:
-ChatGPT suggested first calculating the total number of each recorded infraction type within each facility type and then calculating the percentage within each facility type.
+Chatgpt:
+Suggested first calculating the total number of each recorded infraction type within each facility type and then calculating the percentage within each facility type.
 
-Example code:
+code:
 
 severity_by_type <- inspections %>%
   group_by(type) %>%
@@ -101,10 +101,10 @@ Usage 5 - Finding common infraction categories:
 
 User: How can I find the most common infraction categories for each swimming facility type?
 
-LLM:
-ChatGPT suggested filtering out observations where infCategory was "None", counting the categories by facility type, and calculating their percentage within each facility type.
+Chatgpt:
+Filtering out observations where infCategory was "None", counting the categories by facility type, and calculating their percentage within each facility type.
 
-Example code:
+code:
 
 category_by_type <- swimsafe %>%
   filter(infCategory != "None") %>%
@@ -118,10 +118,10 @@ Usage 6 - Finding the most common specific deficiencies:
 
 User: I want to find the top five specific deficiencies for each facility type.
 
-LLM:
-ChatGPT suggested counting defDesc within each facility type, removing "None", and selecting the five most frequent deficiencies.
+Chatgpt:
+Counting defDesc within each facility type, removing "None", and selecting the five most frequent deficiencies.
 
-Example code:
+code:
 
 top_deficiencies <- swimsafe %>%
   filter(defDesc != "None", !is.na(defDesc)) %>%
@@ -135,10 +135,10 @@ Usage 7 - Creating a facility location plot:
 
 User: The geometry column contains coordinates. How can I extract the longitude and latitude and make a simple map showing the locations of the swimming facilities?
 
-LLM:
-ChatGPT helped extract the longitude and latitude from the geometry column and create a ggplot2 scatter plot showing the facility locations by facility type.
+Chatgpt:
+Helped extract the longitude and latitude from the geometry column and create a ggplot2 scatter plot showing the facility locations by facility type.
 
-Example code:
+code:
 
 facility_locations <- swimsafe |>
   distinct(estName, type, geometry) |>
@@ -153,10 +153,10 @@ Usage 8 - Creating an inspection timeline:
 
 User: I want to show how many inspections were recorded each month. How can I create this plot?
 
-LLM:
-ChatGPT suggested grouping the inspection-level data by month and using ggplot2 to create a line plot.
+Chatgpt:
+Grouping the inspection-level data by month and using ggplot2 to create a line plot.
 
-Example code:
+code:
 
 inspection_timeline <- inspections |>
   mutate(month = as.Date(format(insDate, "%Y-%m-01"))) |>
