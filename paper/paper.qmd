@@ -5,7 +5,7 @@ author: "Vijval Rallan"
 thanks: "Code and data are available at: https://github.com/rallan-vijval/Toronto_SwimSafe"
 date: 2026-09-28
 date-format: long
-abstract: By examining how inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto using publicly available SwimSafe inspection data, this analysis aggregates 17,891 raw records into 9,967 inspection-level observations and compares Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. The results suggest that Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions also differs across facility types.
+abstract: This paper examines how inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto using publicly available SwimSafe inspection data. The analysis aggregates 17,891 raw records into 9,967 inspection-level observations and compares Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions also differs across facility types.
 format: pdf
 bibliography: references.bib
 number-sections: true
@@ -37,10 +37,10 @@ The remainder of the paper first describes the SwimSafe data and the constructio
 
 The analysis uses the City of Toronto's SwimSafe dataset, which contains records from inspections of swimming facilities in Toronto [@torontoSwimSafe]. The dataset used for this analysis contains 17,891 records covering inspections dated from July 8, 2024 to September 25, 2026. The raw data include information about the facility and establishment, inspection date and status, and recorded observations and infractions.
 
-## SwimSafe Inspection Data
 ```{r}
 #| label: tbl-rawdata
 #| tbl-cap: "Example observations from the SwimSafe inspection data"
+#| tbl-pos: H
 #| echo: false
 
 swimsafe <- read_csv(
@@ -67,7 +67,8 @@ swimsafe |>
   tinytable::tt()
 ```
 
-The raw dataset contains multiple records for some inspections because a single inspection can include multiple observations or recorded infractions. Therefore, a row in the raw dataset does not necessarily represent one complete inspection.
+## SwimSafe Inspection Data
+The raw dataset contains multiple records for some inspections because a single inspection can include multiple observations or recorded infractions. Therefore, a row in the raw dataset does not necessarily represent one complete inspection as seen in @tbl-rawdata.
 For this analysis, an inspection is defined as one establishment, one facility type, and one inspection date. Records were grouped using these three variables and aggregated to create an inspection-level dataset. This produced 9,967 inspections from the 17,891 raw records.
 The analysis dataset contains 9,967 inspections across four facility types. Indoor pools account for the largest number of inspections, while outdoor spas account for the fewest. The difference in the number of observations across facility types is important when interpreting comparisons, particularly for outdoor spas.
 @tbl-inspection-summary shows the number of inspection-level observations available for each facility type.
@@ -244,7 +245,7 @@ ggplot(
 
 ## Recorded infraction types
 ```{r}
-#| label: fig-infraction-severity
+#| label: fig-infraction-types
 #| fig-cap: "Distribution of recorded infraction types by swimming facility type."
 #| echo: false
 
@@ -262,6 +263,12 @@ severity_by_type <- inspections |>
   ) |>
   group_by(type) |>
   mutate(
+    severity = recode(
+    severity,
+    minor = "Minor",
+    significant = "Significant",
+    crucial = "Crucial"
+  ),
     percent = 100 * n / sum(n)
   ) |>
   ungroup()
@@ -287,7 +294,7 @@ ggplot(
     legend.position = "bottom"
   )
 ```
-@fig-infraction-severity shows that the composition of recorded infraction types differs across facility types. Indoor Pools have the largest share of recorded infractions classified as Minor, at 68.9%, whereas Spa Outdoor facilities have the smallest share, at 49.1%. The combined share of Significant and Crucial infractions ranges from 31.1% for Indoor Pools to 50.9% for Spa Outdoor facilities. These percentages describe the distribution of recorded infractions within each facility type; they do not represent the percentage of inspections with an infraction of a particular type.
+@fig-infraction-types shows that the composition of recorded infraction types differs across facility types. Indoor Pools have the largest share of recorded infractions classified as Minor, at 68.9%, whereas Spa Outdoor facilities have the smallest share, at 49.1%. The combined share of Significant and Crucial infractions ranges from 31.1% for Indoor Pools to 50.9% for Spa Outdoor facilities. These percentages describe the distribution of recorded infractions within each facility type; they do not represent the percentage of inspections with an infraction of a particular type.
 
 ## Infraction categories
 ```{r}
