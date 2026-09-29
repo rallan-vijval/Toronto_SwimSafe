@@ -1,10 +1,11 @@
 ---
 title: "Swimming Facility Inspection Outcomes in Toronto"
+subtitle: "A Descriptive Analysis of Facility Types and Recorded Infractions"
 author: "Vijval Rallan"
 thanks: "Code and data are available at: https://github.com/rallan-vijval/Toronto_SwimSafe"
 date: 2026-09-28
 date-format: long
-abstract: This paper examines how inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto using publicly available SwimSafe inspection data. The analysis aggregates 17,891 raw records into 9,967 inspection-level observations and compares Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions also differs across facility types.
+abstract: By examining how inspection outcomes and recorded infraction patterns vary across different types of swimming facilities in Toronto using publicly available SwimSafe inspection data, this analysis aggregates 17,891 raw records into 9,967 inspection-level observations and compares Indoor Pools, Outdoor Pools, Spa Indoor facilities, and Spa Outdoor facilities. The results suggest that Outdoor facility types have higher observed proportions of non-Pass inspection outcomes than Indoor Pools, while the composition of recorded infractions also differs across facility types.
 format: pdf
 bibliography: references.bib
 number-sections: true

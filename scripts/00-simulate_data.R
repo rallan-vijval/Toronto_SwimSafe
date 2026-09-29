@@ -1,3 +1,13 @@
+#### Preamble ####
+# Purpose: Simulate the SwimSafe Data
+# Author: Vijval Rallan
+# Date: 28 September 2026
+# Contact: vijval.rallan@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: Review the plan and sketches for the analysis in the "other/sketches" folder
+# Any other information needed? N/A
+
+
 # Simulate a small SwimSafe-like dataset for testing
 # This is not used for the results in the paper.
 

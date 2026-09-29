@@ -1,3 +1,14 @@
+#### Preamble ####
+# Purpose: Visualize and save the actual charts/figures for the analysis
+# from Open Data Toronto
+# Author: Vijval Rallan
+# Date: 28 September 2026
+# Contact: vijval.rallan@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: Do the analysis in analysis.R file
+# Any other information needed? N/A
+
+
 # SwimSafe visualizations
 # -----------------------
 

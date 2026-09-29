@@ -1,3 +1,14 @@
+#### Preamble ####
+# Purpose: Analyse the cleaned SwimSafe Dataset
+# from Open Data Toronto
+# Author: Vijval Rallan
+# Date: 28 September 2026
+# Contact: vijval.rallan@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: Do the data cleaning in the clean_data.R file 
+# Any other information needed? N/A
+
+
 # SwimSafe analysis
 # -----------------
 

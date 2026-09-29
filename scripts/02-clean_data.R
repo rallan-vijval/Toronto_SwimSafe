@@ -1,3 +1,12 @@
+#### Preamble ####
+# Purpose: Clean the raw SwimSafe Data
+# Author: Vijval Rallan
+# Date: 28 September 2026
+# Contact: vijval.rallan@mail.utoronto.ca
+# License: MIT
+# Pre-requisites: Download and save the actual SwimSafe Data from Open Data Toronto
+# Any other information needed? N/A
+
 # Clean and aggregate SwimSafe data
 # ---------------------------------
 library(tidyverse)
