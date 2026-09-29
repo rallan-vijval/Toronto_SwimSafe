@@ -57,7 +57,7 @@ non_pass_by_type
 
 
 # ---------------------------------------------------------
-# 3. Recorded infraction severity by facility type
+# 3. Recorded infraction types by facility type
 # ---------------------------------------------------------
 
 severity_by_type <- inspections %>%

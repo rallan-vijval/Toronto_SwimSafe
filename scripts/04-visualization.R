@@ -151,7 +151,7 @@ figure_3
 # Save Figure 3
 ggsave(
   "other/charts/figure_3_inspection_outcomes.png",
-  plot = figure_1,
+  plot = figure_3,
   width = 8,
   height = 5,
   dpi = 300
@@ -204,7 +204,7 @@ figure_4
 
 ggsave(
   "other/charts/figure_4_infraction_types.png",
-  plot = figure_2,
+  plot = figure_4,
   width = 8,
   height = 5,
   dpi = 300
@@ -283,7 +283,7 @@ figure_5
 
 ggsave(
   "other/charts/figure_5_infraction_categories.png",
-  plot = figure_3,
+  plot = figure_5,
   width = 9,
   height = 6,
   dpi = 300

@@ -11,7 +11,7 @@
 
 # Download Toronto SwimSafe data
 # --------------------------------
-install.packages('opendatatoronto')
+
 library(opendatatoronto)
 library(dplyr)
 
