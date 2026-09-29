@@ -57,8 +57,4 @@ The scripts use project-relative paths so that the analysis does not depend on a
 
 ## Statement on LLM usage
 
-ChatGPT was used during the development of this project to assist with brainstorming the research question, reviewing analysis and visualization choices, debugging R and Quarto code, interpreting assignment requirements, and revising parts of the written paper.
-
-The author made the final decisions about the research question, data processing, analysis, visualizations, interpretation, and written content. The complete ChatGPT conversation used during the project is available in:
-
-`other/llm/chatgpt_usage.txt`
+This project utilized ChatGPT to assist during the research, development, and writing processes. All records of usage can be found in the `other/llm` folder of this repository.
