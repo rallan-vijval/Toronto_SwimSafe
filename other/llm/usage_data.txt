@@ -173,3 +173,233 @@ ggplot(
     x = "Month",
     y = "Number of inspections"
   )
+
+Usage 9 - Comparing recorded infraction types:
+
+User: I want to see the distribution of Minor, Significant, and Crucial recorded infractions for each facility type. How can I calculate the percentages?
+
+Chatgpt:
+Calculating the total number of each recorded infraction type within each facility type and then calculating the percentage within each facility type.
+
+code:
+
+severity_by_type <- inspections %>%
+  group_by(type) %>%
+  summarise(
+    minor = sum(minor),
+    significant = sum(significant),
+    crucial = sum(crucial)
+  ) %>%
+  pivot_longer(
+    cols = c(minor, significant, crucial),
+    names_to = "severity",
+    values_to = "n"
+  ) %>%
+  group_by(type) %>%
+  mutate(
+    percent = 100 * n / sum(n)
+  ) %>%
+  ungroup()
+
+
+Usage 10 - Finding common infraction categories:
+
+User: How can I find the most common infraction categories for each swimming facility type?
+
+Chatgpt:
+Filtering out observations where infCategory was "None", counting the categories by facility type, and calculating their percentage within each facility type.
+
+code:
+
+category_by_type <- swimsafe %>%
+  filter(infCategory != "None") %>%
+  count(type, infCategory, name = "n") %>%
+  group_by(type) %>%
+  mutate(percent = 100 * n / sum(n)) %>%
+  ungroup()
+
+
+Usage 11 - Finding the most common specific deficiencies:
+
+User: I want to find the top five specific deficiencies for each facility type. How can I do this?
+
+Chatgpt:
+Removing observations where defDesc was "None", counting the remaining deficiencies within each facility type, and selecting the five most frequent deficiencies.
+
+code:
+
+top_deficiencies <- swimsafe %>%
+  filter(defDesc != "None", !is.na(defDesc)) %>%
+  count(type, defDesc, name = "n") %>%
+  group_by(type) %>%
+  slice_max(order_by = n, n = 5, with_ties = FALSE) %>%
+  arrange(type, desc(n))
+
+
+Usage 12 - Creating the facility location data:
+
+User: The geometry column contains coordinates. How can I extract the longitude and latitude and create a dataset that contains one location for each establishment and facility type?
+
+Chatgpt:
+Extract the coordinates from the geometry column and remove duplicate facility locations.
+
+code:
+
+facility_locations <- swimsafe |>
+  distinct(estName, type, geometry) |>
+  mutate(
+    coordinates = str_extract_all(
+      geometry,
+      "-?[0-9]+\\.[0-9]+"
+    ),
+    longitude = map_dbl(
+      coordinates,
+      ~ as.numeric(.x[1])
+    ),
+    latitude = map_dbl(
+      coordinates,
+      ~ as.numeric(.x[2])
+    )
+  )
+
+
+Usage 13 - Creating the facility location plot:
+
+User: How can I make a simple ggplot2 plot showing the locations of the swimming facilities and use different colours for the facility types?
+
+Chatgpt:
+Created a ggplot2 scatter plot using longitude and latitude and facility type.
+
+code:
+
+ggplot(
+  facility_locations,
+  aes(x = longitude, y = latitude, color = type)
+) +
+  geom_point(alpha = 0.45, size = 1.4) +
+  coord_fixed() +
+  labs(
+    title = "Swimming facility locations in the SwimSafe data",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Facility type"
+  ) +
+  theme_minimal()
+
+
+Usage 14 - Creating the inspection timeline:
+
+User: I want to show how many inspections were recorded each month. How can I create this plot?
+
+Chatgpt:
+Grouping the inspection-level data by month and using ggplot2 to create a line plot.
+
+code:
+
+inspection_timeline <- inspections |>
+  mutate(month = as.Date(format(insDate, "%Y-%m-01"))) |>
+  count(month, name = "inspections")
+
+ggplot(
+  inspection_timeline,
+  aes(x = month, y = inspections)
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  labs(
+    title = "Monthly number of recorded inspections",
+    x = "Month",
+    y = "Number of inspections"
+  ) +
+  theme_minimal()
+
+
+Usage 15 - Creating the inspection outcome visualization:
+
+User: What would be a clear way to visualize the differences in inspection outcomes between the four facility types?
+
+Chatgpt:
+Suggested using a bar chart to compare the percentage of Pass, Conditional Pass, and Closed inspections within each facility type.
+
+The visualization was designed so that the four facility types could be compared directly despite having different numbers of inspections.
+
+
+Usage 16 - Creating the infraction visualizations:
+
+User: What would be a good visualization for comparing the recorded infraction types and infraction categories across facility types?
+
+Chatgpt:
+Suggested using bar charts to compare the composition of recorded infraction types and the most common infraction categories across the four facility types.
+
+The analysis used percentages within facility type so that facility types with different numbers of inspections could be compared.
+
+
+Usage 17 - Creating the summary table:
+
+User: I want a table showing the number of inspection-level observations for each facility type. How can I create this table in R using tinytable?
+
+Chatgpt:
+Suggested counting the inspection-level observations by facility type and formatting the result with tinytable.
+
+code:
+
+inspection_summary <- inspections |>
+  count(type, name = "inspections") |>
+  rename(
+    `Facility type` = type,
+    `Number of inspections` = inspections
+  )
+
+inspection_summary |>
+  tinytable::tt()
+
+
+Usage 18 - Creating a table of raw observations:
+
+User: I want to include a small table showing examples of the actual raw SwimSafe data rather than only summary statistics. How can I do this?
+
+Chatgpt:
+Suggested selecting a small number of relevant columns and displaying the first few observations using tinytable.
+
+code:
+
+swimsafe |>
+  select(
+    facilityName,
+    type,
+    insStatus,
+    insDate,
+    infType
+  ) |>
+  slice_head(n = 5) |>
+  rename(
+    `Facility` = facilityName,
+    `Facility type` = type,
+    `Inspection status` = insStatus,
+    `Inspection date` = insDate,
+    `Infraction type` = infType
+  ) |>
+  tinytable::tt()
+
+
+Usage 19 - Formatting numbers in tables:
+
+User: Some of the numbers in my tables are difficult to read. How can I format large numbers with commas?
+
+Chatgpt:
+Suggested using format() with the big.mark argument to add commas to large numbers.
+
+Example:
+
+format(
+  `Number of inspections`,
+  big.mark = ","
+)
+
+
+Usage 20 - Checking the analysis:
+
+User: Can you check my calculations and make sure the percentages are being calculated within each facility type rather than across the entire dataset?
+
+Chatgpt:
+Helped check the grouping and percentage calculations and explained that percentages for the inspection outcomes and infraction comparisons should be calculated within each facility type because the number of observations differs between facility types.
