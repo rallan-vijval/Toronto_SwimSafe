@@ -23,7 +23,7 @@ How do inspection outcomes and recorded infraction patterns vary across differen
 
 The data are obtained from the City of Toronto's SwimSafe dataset:
 
-[City of Toronto SwimSafe](https://www.toronto.ca/community-people/health-wellness-care/health-inspections-monitoring/swimsafe/)
+[City of Toronto SwimSafe](https://open.toronto.ca/dataset/swimsafe/)
 
 The raw data are stored in `data/raw_data/`. The inspection-level dataset created from the raw data is stored in `data/analysis_data/`.
 
