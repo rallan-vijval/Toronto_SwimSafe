@@ -11,6 +11,9 @@
 # R environment / credentials
 .Renviron
 .httr-oauth
+.renv/
+renv.lock
+.Rprofile
 
 # R Markdown / Quarto temporary files
 *_cache/
