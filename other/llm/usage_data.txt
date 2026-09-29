@@ -1,0 +1,175 @@
+LLM: ChatGPT
+
+Usage 1 - Accessing the SwimSafe dataset:
+
+User: I want to use the Toronto SwimSafe dataset for my project. How can I access the dataset using the opendatatoronto package and find the CSV resource?
+
+LLM:
+ChatGPT helped me use the opendatatoronto package to access the Toronto Open Data portal and identify the SwimSafe CSV resource.
+
+Example code:
+library(opendatatoronto)
+library(dplyr)
+
+package <- show_package("e36df4b9-f772-49ab-a87b-f90b869b7a44")
+
+resources <- list_package_resources(
+  "e36df4b9-f772-49ab-a87b-f90b869b7a44"
+)
+
+datastore_resources <- filter(
+  resources,
+  tolower(format) %in% c("csv", "geojson")
+)
+
+
+Usage 2 - Understanding the unit of analysis:
+
+User: The SwimSafe dataset has multiple rows for the same inspection because there can be multiple infractions. How should I aggregate the data so that each observation represents one inspection?
+
+LLM:
+ChatGPT explained that the raw records should be aggregated using the establishment, facility type, and inspection date. It suggested grouping by estName, type, and insDate and summarizing the inspection status and recorded infractions.
+
+Example code:
+
+inspections <- swimsafe %>%
+  group_by(estName, type, insDate) %>%
+  summarise(
+    facilityName = first(facilityName),
+    insStatus = case_when(
+      any(insStatus == "Closed") ~ "Closed",
+      any(insStatus == "Conditional Pass") ~ "Conditional Pass",
+      any(insStatus == "Pass") ~ "Pass",
+      TRUE ~ NA_character_
+    ),
+    infractions = sum(infType != "None", na.rm = TRUE),
+    minor = sum(infType == "M - Minor", na.rm = TRUE),
+    significant = sum(infType == "S - Significant", na.rm = TRUE),
+    crucial = sum(infType == "C - Crucial", na.rm = TRUE),
+    categories = n_distinct(infCategory[infCategory != "None"]),
+    .groups = "drop"
+  )
+
+
+Usage 3 - Calculating inspection outcomes:
+
+User: I want to compare the percentage of non-Pass inspections across Indoor Pool, Outdoor Pool, Spa Indoor, and Spa Outdoor. How can I calculate this in R?
+
+LLM:
+ChatGPT suggested grouping the inspection-level data by facility type and calculating the number and percentage of inspections that were not Pass.
+
+Example code:
+
+non_pass_by_type <- inspections %>%
+  group_by(type) %>%
+  summarise(
+    inspections = n(),
+    non_pass = sum(insStatus != "Pass"),
+    non_pass_percent = 100 * non_pass / inspections
+  )
+
+
+Usage 4 - Comparing recorded infraction types:
+
+User: I want to see the distribution of Minor, Significant, and Crucial recorded infractions for each facility type. How can I calculate the percentages?
+
+LLM:
+ChatGPT suggested first calculating the total number of each recorded infraction type within each facility type and then calculating the percentage within each facility type.
+
+Example code:
+
+severity_by_type <- inspections %>%
+  group_by(type) %>%
+  summarise(
+    minor = sum(minor),
+    significant = sum(significant),
+    crucial = sum(crucial)
+  ) %>%
+  pivot_longer(
+    cols = c(minor, significant, crucial),
+    names_to = "severity",
+    values_to = "n"
+  ) %>%
+  group_by(type) %>%
+  mutate(
+    percent = 100 * n / sum(n)
+  ) %>%
+  ungroup()
+
+
+Usage 5 - Finding common infraction categories:
+
+User: How can I find the most common infraction categories for each swimming facility type?
+
+LLM:
+ChatGPT suggested filtering out observations where infCategory was "None", counting the categories by facility type, and calculating their percentage within each facility type.
+
+Example code:
+
+category_by_type <- swimsafe %>%
+  filter(infCategory != "None") %>%
+  count(type, infCategory, name = "n") %>%
+  group_by(type) %>%
+  mutate(percent = 100 * n / sum(n)) %>%
+  ungroup()
+
+
+Usage 6 - Finding the most common specific deficiencies:
+
+User: I want to find the top five specific deficiencies for each facility type.
+
+LLM:
+ChatGPT suggested counting defDesc within each facility type, removing "None", and selecting the five most frequent deficiencies.
+
+Example code:
+
+top_deficiencies <- swimsafe %>%
+  filter(defDesc != "None", !is.na(defDesc)) %>%
+  count(type, defDesc, name = "n") %>%
+  group_by(type) %>%
+  slice_max(order_by = n, n = 5, with_ties = FALSE) %>%
+  arrange(type, desc(n))
+
+
+Usage 7 - Creating a facility location plot:
+
+User: The geometry column contains coordinates. How can I extract the longitude and latitude and make a simple map showing the locations of the swimming facilities?
+
+LLM:
+ChatGPT helped extract the longitude and latitude from the geometry column and create a ggplot2 scatter plot showing the facility locations by facility type.
+
+Example code:
+
+facility_locations <- swimsafe |>
+  distinct(estName, type, geometry) |>
+  mutate(
+    coordinates = str_extract_all(geometry, "-?[0-9]+\\.[0-9]+"),
+    longitude = map_dbl(coordinates, ~ as.numeric(.x[1])),
+    latitude = map_dbl(coordinates, ~ as.numeric(.x[2]))
+  )
+
+
+Usage 8 - Creating an inspection timeline:
+
+User: I want to show how many inspections were recorded each month. How can I create this plot?
+
+LLM:
+ChatGPT suggested grouping the inspection-level data by month and using ggplot2 to create a line plot.
+
+Example code:
+
+inspection_timeline <- inspections |>
+  mutate(month = as.Date(format(insDate, "%Y-%m-01"))) |>
+  count(month, name = "inspections")
+
+ggplot(
+  inspection_timeline,
+  aes(x = month, y = inspections)
+) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Monthly number of recorded inspections",
+    x = "Month",
+    y = "Number of inspections"
+  )
